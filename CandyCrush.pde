@@ -50,7 +50,7 @@ void drawBoard() {
     for (int j=0; j<board.gamestate[i].length; j++) {
       CandyPiece temp = board.gamestate[i][j];
       fill(temp.colorr);
-      ellipse(temp.xPos, temp.yPos, 60, 60);
+      ellipse(temp.xPos, temp.yPos, temp.pieceWidth, temp.pieceWidth);
     }
   }
 }

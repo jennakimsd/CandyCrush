@@ -3,8 +3,9 @@ public class CandyPiece {
   int colorr;
   int xPos;
   int yPos;
+  int pieceWidth = 50;
 
-  CandyPiece( int x, int y) {
+  CandyPiece(int x, int y) {
     this.xPos = x;
     this.yPos = y;
     chooseRandomColor();
