@@ -2,76 +2,98 @@ public class CandyBoard {
   CandyPiece[][] gamestate;
   int cellsPerRow=10;
   int cellsPerColumn=10;
-  int xPos = 50;
-  int yPos = 50;
-  int candySpacing = 75;
   boolean isActive = true;
+  int topBorderOffset = (candyPieceSize*3)/2; //give gap of 1 candyPiece for header
+  int leftBorderOffset = candyPieceSize/2; //line up pieces against left edge
 
   CandyBoard() {
     gamestate= new CandyPiece[cellsPerRow][cellsPerColumn];
+    int xPos = leftBorderOffset;
+    int yPos = topBorderOffset;
     for (int i=0; i< gamestate.length; i++) {
       for (int j=0; j<gamestate[i].length; j++) {
+        xPos = candyPieceSize*i+leftBorderOffset;
+        yPos = candyPieceSize*j+topBorderOffset;
         gamestate[i][j] = new CandyPiece(xPos, yPos);
-        yPos+=candySpacing;
       }
-      yPos=50;
-      xPos+=candySpacing;
     }
   }
   
-  CandyPiece[][] removeMatches(CandyPiece[][] gamestateCopy){
-    int xCopy;
-    int yCopy;
+  void removeMatches(){
+    int currX;
+    int currY;
    
-    for (int i=0; i< gamestateCopy.length; i++) {
-      for (int j=0; j<gamestateCopy[i].length; j++) {
-        xCopy = candySpacing*i+gamestateCopy[i][j].pieceWidth;
-        yCopy = candySpacing*j+gamestateCopy[i][j].pieceWidth;
+    for (int i=0; i< gamestate.length; i++) {
+      for (int j=0; j<gamestate[i].length; j++) {
+        currX = gamestate[i][j].xPos;
+        currY = gamestate[i][j].yPos;
         
         //check right
         if(i<board.gamestate.length-2){
-         if(gamestateCopy[i][j].matches(gamestateCopy[i+1][j])){
-          if(gamestateCopy[i][j].matches(gamestateCopy[i+2][j])){
-            gamestateCopy[i+1][j] = new PlaceHolder(xCopy+gamestateCopy[i][j+4].pieceWidth, yCopy);
-            gamestateCopy[i+2][j] = new PlaceHolder(xCopy+gamestateCopy[i+2][j].pieceWidth*2, yCopy);
-            println(gamestateCopy[i+1][j].pieceWidth);
+         if(gamestate[i][j].matches(gamestate[i+1][j])){
+          if(gamestate[i][j].matches(gamestate[i+2][j])){
+            gamestate[i+1][j] = new PlaceHolder(currX+candyPieceSize, currY);
+            gamestate[i+2][j] = new PlaceHolder(currX+candyPieceSize*2, currY);
             if(i<board.gamestate.length-3){
-              if(gamestateCopy[i][j].matches(gamestateCopy[i+3][j])){
-                gamestateCopy[i+3][j] = new PlaceHolder(xCopy+gamestateCopy[i+3][j].pieceWidth*3, yCopy);
+              if(gamestate[i][j].matches(gamestate[i+3][j])){
+                gamestate[i+3][j] = new PlaceHolder(currX+candyPieceSize*3, currY);
               }
             }
              if(i<board.gamestate.length-4){
-              if(gamestateCopy[i][j].matches(gamestateCopy[i+4][j])){
-                gamestateCopy[i+4][j] = new PlaceHolder(xCopy+gamestateCopy[i+4][j].pieceWidth*4, yCopy);
+              if(gamestate[i][j].matches(gamestate[i+4][j])){
+                gamestate[i+4][j] = new PlaceHolder(currX+candyPieceSize*4, currY);
               }
             }
-            gamestateCopy[i][j]= new PlaceHolder(xCopy, yCopy);
+            gamestate[i][j]= new PlaceHolder(currX, currY);
           }
           }
         }
         //check down
         if(j<board.gamestate[i].length-3){
-           if(gamestateCopy[i][j].matches(gamestateCopy[i][j+1])){
-            if(gamestateCopy[i][j].matches(gamestateCopy[i][j+2])){
-              gamestateCopy[i][j+1] = new PlaceHolder(xCopy, yCopy+gamestateCopy[i][j+1].pieceWidth);
-              gamestateCopy[i][j+2] = new PlaceHolder(xCopy, yCopy+gamestateCopy[i][j+2].pieceWidth*2);
-               if(j<board.gamestate[i].length-3){
-              if(gamestateCopy[i][j].matches(gamestateCopy[i][j+3])){
-                gamestateCopy[i][j+3] = new PlaceHolder(xCopy, yCopy+gamestateCopy[i][j+3].pieceWidth*3);
+           if(gamestate[i][j].matches(gamestate[i][j+1])){
+          if(gamestate[i][j].matches(gamestate[i][j+2])){
+            gamestate[i][j+1] = new PlaceHolder(currX, currY+candyPieceSize);
+            gamestate[i][j+2] = new PlaceHolder(currX, currY+candyPieceSize*2);
+            if(j<board.gamestate[i].length-3){
+              if(gamestate[i][j].matches(gamestate[i][j+3])){
+                gamestate[i][j+3] = new PlaceHolder(currX, currY+candyPieceSize*3);
               }
             }
-              if(i<board.gamestate[i].length-4){
-              if(gamestateCopy[i][j].matches(gamestateCopy[i][j+4])){
-                gamestateCopy[i][j+4] = new PlaceHolder(xCopy, yCopy+gamestateCopy[i][j+4].pieceWidth*4);
+             if(i<board.gamestate[i].length-4){
+              if(gamestate[i][j].matches(gamestate[i][j+4])){
+                gamestate[i][j+4] = new PlaceHolder(currX, currY+candyPieceSize*4);
               }
             }
-            gamestateCopy[i][j]= new PlaceHolder(xCopy, yCopy);
-            }
+            gamestate[i][j]= new PlaceHolder(currX, currY);
           }
+         }
         }
-
+       }
+      }
+     }
+     
+  void update() {
+    PlaceHolder temp;
+    for (int i=gamestate.length-1; i>= 0; i--) {
+      for (int j=gamestate[i].length-1; j>= 1; j--) {
+        temp = new PlaceHolder(gamestate[i][j-1].xPos,gamestate[i][j-1].yPos);
+        
+        if(gamestate[i][j] instanceof PlaceHolder) {
+           while(gamestate[i][j-1].yPos < gamestate[i][j].yPos) {
+             gamestate[i][j-1].yPos++;
+           }
+           gamestate[i][j] = gamestate[i][j-1];
+           gamestate[i][j-1] = temp;
+        }
       }
     }
-    return gamestateCopy;
-      }
-    }
+  }
+  
+  void dropNewPieces() {
+     for (int i=gamestate.length-1; i>= 0; i--) {
+       if(gamestate[i][0] instanceof PlaceHolder) {
+         gamestate[i][0] = new CandyPiece(gamestate[i][0].xPos,gamestate[i][0].yPos);  
+       }
+     }
+  }
+}
