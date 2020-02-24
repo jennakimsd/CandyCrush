@@ -1,7 +1,7 @@
 int candyPieceSize;
 int score=0;
 int lives=3;
-int movesRemaining=20;
+int movesRemaining=5;
 int lastClickedX= 0;
 int lastClickedY = 0;
 final int MENU_STATE=0;
@@ -26,14 +26,20 @@ void setup() {
 void draw() {
   background(#E8FDFF);
   drawBoard();
-  //board.removeMatches();
-  //board.update();
+  board.removeMatches();
+  board.update();
+  board.dropNewPieces();
   fill(0,0,0);
   textSize(18);
   textAlign(LEFT,BOTTOM);
   text("Score: " + score, 30, 35);
   text("Moves Remaining: " + movesRemaining, 150, 35);
   text("Lives: " + lives, 390, 35);
+  if(movesRemaining==0){
+    lives--;
+    movesRemaining=5;
+    score-=100;
+  }
 } 
 
 void mousePressed() {
@@ -42,7 +48,8 @@ void mousePressed() {
   lastClickedY = (mouseY/candyPieceSize) - 1;
 }
 void keyPressed() {
-   if (key == 'r' || key == 'R') {
+  //used for testing
+   /*if (key == 'r' || key == 'R') {
     board.removeMatches();
     movesRemaining--;
     score+=5;
@@ -52,8 +59,9 @@ void keyPressed() {
       board.update();
       board.dropNewPieces();
   }
-  
+  */
   if (key == CODED) {
+    movesRemaining--;
     if (keyCode == UP) {
      board.gamestate[lastClickedX][lastClickedY].swapColors(board.gamestate[lastClickedX][lastClickedY-1]);
     } else if (keyCode == DOWN) {
