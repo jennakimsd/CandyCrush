@@ -1,13 +1,12 @@
 int candyPieceSize;
 int score=0;
-int lives=3;
 int movesRemaining=5;
 int lastClickedX= 0;
 int lastClickedY = 0;
 final int MENU_STATE=0;
 final int GAME_STATE=1;
 final int END_STATE=2;
-int currentState = MENU_STATE;
+int currentState = GAME_STATE;
 public static CandyBoard board;
 
 void initiate() {
@@ -24,6 +23,7 @@ void setup() {
 }
 
 void draw() {
+  if(currentState == GAME_STATE){
   background(#E8FDFF);
   drawBoard();
   board.removeMatches();
@@ -34,11 +34,20 @@ void draw() {
   textAlign(LEFT,BOTTOM);
   text("Score: " + score, 30, 35);
   text("Moves Remaining: " + movesRemaining, 150, 35);
-  text("Lives: " + lives, 390, 35);
+  if(movesRemaining==5){
+    score = 0;
+  }
   if(movesRemaining==0){
-    lives--;
-    movesRemaining=5;
-    score-=100;
+    currentState = END_STATE;
+  }
+  }
+  else if(currentState == END_STATE){
+    background(#E8FDFF);
+    fill(0,0,0);
+    textSize(50);
+    textAlign(CENTER,CENTER);
+    text("YOU LOST!", width/2, height/2 - 40);
+    text("your score was: " + score, width/2, height/2);
   }
 } 
 
