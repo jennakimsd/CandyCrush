@@ -1,5 +1,6 @@
 int candyPieceSize;
 int score=0;
+int highScore = 0;
 int movesRemaining=5;
 int lastClickedX= 0;
 int lastClickedY = 0;
@@ -24,30 +25,41 @@ void setup() {
 
 void draw() {
   if(currentState == GAME_STATE){
-  background(#E8FDFF);
-  drawBoard();
-  board.removeMatches();
-  board.update();
-  board.dropNewPieces();
-  fill(0,0,0);
-  textSize(18);
-  textAlign(LEFT,BOTTOM);
-  text("Score: " + score, 30, 35);
-  text("Moves Remaining: " + movesRemaining, 150, 35);
-  if(movesRemaining==5){
-    score = 0;
-  }
-  if(movesRemaining==0){
-    currentState = END_STATE;
-  }
+    background(#E8FDFF);
+    drawBoard();
+    board.removeMatches();
+    board.update();
+    board.dropNewPieces();
+    fill(0,0,0);
+    textSize(18);
+    textAlign(LEFT,BOTTOM);
+    text("Score: " + score, 30, 35);
+    text("Moves Remaining: " + movesRemaining, 150, 35);
+    if(movesRemaining==5){
+      score = 0;
+    }
+    if(movesRemaining==0){
+      currentState = END_STATE;
+    }
   }
   else if(currentState == END_STATE){
+    if(score > highScore){
+      highScore = score;
+    }
+    if(keyPressed) {
+      if (key == ENTER) {
+        currentState = GAME_STATE;
+        score = 0;
+        movesRemaining = 5;
+      }
+    }
     background(#E8FDFF);
     fill(0,0,0);
-    textSize(50);
+    textSize(30);
     textAlign(CENTER,CENTER);
-    text("YOU LOST!", width/2, height/2 - 40);
-    text("your score was: " + score, width/2, height/2);
+    text("your score was: " + score, width/2, height/2 - 40);
+    text("the high score is: " + highScore, width/2, height/2);
+    text("press enter to play again!!", width/2, height/2 + 40);
   }
 } 
 
