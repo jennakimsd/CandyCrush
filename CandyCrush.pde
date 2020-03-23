@@ -38,7 +38,7 @@ void draw() {
     if(movesRemaining==5){
       score = 0;
     }
-    if(movesRemaining==0){
+    if(movesRemaining<=0){
       currentState = END_STATE;
     }
   }
@@ -49,7 +49,6 @@ void draw() {
     if(keyPressed) {
       if (key == ENTER) {
         currentState = GAME_STATE;
-        score = 0;
         movesRemaining = 5;
       }
     }
